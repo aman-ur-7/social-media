@@ -80,7 +80,7 @@ const SignUp = () => {
     axios
       .post("http://localhost:7001/user/", { name, email, password, pic })
       .then((data) => {
-        // console.log(data);
+        console.log(data);
         toast({
           title: "Registration successful",
           status: "success",
@@ -89,7 +89,7 @@ const SignUp = () => {
           position: "bottom",
         });
         localStorage.setItem("userInfo", JSON.stringify(data));
-        // navigate("/home");
+        navigate("/login");
       })
       .catch((err) => {
         console.log(err);
