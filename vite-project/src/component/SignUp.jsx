@@ -56,8 +56,9 @@ const SignUp = () => {
     }
   };
 
-  const submitHandler = async () => {
-    setIsLoading(true);
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    // setIsLoading(true);
     if (!name || !email || !password || !confirm) {
       toast({
         title: "Please enter all the fields",
@@ -77,8 +78,18 @@ const SignUp = () => {
         position: "bottom",
       });
     }
-    axios
-      .post("http://localhost:7001/user/", { name, email, password, pic })
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+      },
+    };
+
+    await axios
+      .post(
+        "http://localhost:7001/user/",
+        { name, email, password, pic },
+        config
+      )
       .then((data) => {
         console.log(data);
         toast({
@@ -94,7 +105,7 @@ const SignUp = () => {
       .catch((err) => {
         console.log(err);
       });
-    setIsLoading(false);
+    // setIsLoading(false);
   };
 
   return (
