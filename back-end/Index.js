@@ -5,7 +5,6 @@ const dotEnv = require("dotenv");
 const cors = require("cors");
 const connectDB = require("./config/db");
 const userRoutes = require("./routes/userRoutes");
-const chatApi = require("./routes/chatApi");
 
 App.use(express.json());
 App.use(cors());
@@ -19,7 +18,6 @@ App.get("/chats", (req, res) => {
 });
 
 App.use("/user", userRoutes);
-App.use("/chat", chatApi);
 
 App.listen(PORT, () => {
   console.log(`server is started`);

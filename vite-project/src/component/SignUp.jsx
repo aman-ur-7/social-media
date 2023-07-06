@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { json, useNavigate } from "react-router-dom";
 import * as react from "@chakra-ui/react";
 
 const SignUp = () => {
@@ -84,9 +84,23 @@ const SignUp = () => {
       },
     };
 
-    await axios
+    // const respond = await axios
+    //   .post(
+    //     "http://localhost:7001/user",
+    //     { name, email, password, pic },
+    //     config
+    //   )
+    //   .then((data) => {
+    //     console.log(data);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+
+    // return respond;
+    const respond = await axios
       .post(
-        "http://localhost:7001/user/",
+        "http://localhost:7001/user",
         { name, email, password, pic },
         config
       )
@@ -99,13 +113,11 @@ const SignUp = () => {
           isClosable: true,
           position: "bottom",
         });
-        localStorage.setItem("userInfo", JSON.stringify(data));
-        navigate("/login");
       })
       .catch((err) => {
         console.log(err);
       });
-    // setIsLoading(false);
+    return respond;
   };
 
   return (

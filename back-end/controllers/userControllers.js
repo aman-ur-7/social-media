@@ -59,10 +59,11 @@ const allUsers = asyncHandler(async (req, res) => {
       }
     : {};
 
-  const curnUser = await user.find(keyword);
-  // .find({ _id: { $ne: req.user._id } });
+  const curnUser = await user
+    .find(keyword)
+    .find({ _id: { $ne: req.user._id } });
 
   res.send(curnUser);
 });
 
-module.exports = { registerUser, authUser, allUsers };
+module.exports = { registerUser, allUsers, authUser };
