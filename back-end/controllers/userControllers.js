@@ -3,6 +3,7 @@ const user = require("../model/UserModel");
 const generateToken = require("../config/generateToken");
 const conversationModel = require("../model/ChatModel");
 const UserModel = require("../model/UserModel");
+const messageModel = require("../model/MessageModel");
 
 const registerUser = asyncHandler(async (req, res) => {
   const { name, password, email, pic } = req.body;
@@ -52,20 +53,30 @@ const authUser = asyncHandler(async (req, res) => {
 });
 
 const allUsers = asyncHandler(async (req, res) => {
-  const keyword = req.query.search
-    ? {
-        $or: [
-          { name: { $regex: req.query.search, $options: "i" } },
-          { email: { $regex: req.query.search, $options: "i" } },
-        ],
-      }
-    : {};
+  // const keyword = req.query.search
+  //   ? {
+  //       $or: [
+  //         { name: { $regex: req.query.search, $options: "i" } },
+  //         { email: { $regex: req.query.search, $options: "i" } },
+  //       ],
+  //     }
+  //   : {};
 
-  const curnUser = await user
-    .find(keyword)
-    .find({ _id: { $ne: req.user._id } });
+  // const curnUser = await user
+  //   .find(keyword)
+  //   .find({ _id: { $ne: req.user._id } });
 
-  res.send(curnUser);
+  // res.send(curnUser);
+
+  try {
+    const users = await UserModel.find();
+    const onlyUsers = users.map((user) => {
+      return { user: { name: user.name, email: user.email }, userId: user._id };
+    });
+    res.send(onlyUsers);
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 const conversation = asyncHandler(async (req, res) => {
@@ -107,10 +118,60 @@ const conversationUserId = asyncHandler(async (req, res) => {
   }
 });
 
+const message = asyncHandler(async (req, res) => {
+  try {
+    const { conversationId, senderId, message, receiveId = "" } = req.body;
+    if (!senderId || !message) return res.send("Please fill the requirements");
+    if (!conversationId && receiveId) {
+      const newConversation = new conversationModel({
+        members: [senderId, receiveId],
+      });
+      await newConversation.save();
+
+      const newMessage = new messageModel({
+        conversationId: newConversation._id,
+        senderId,
+        message,
+      });
+      await newMessage.save();
+      res.send("radhe radhe");
+    } else if (!conversationId && !receiveId) {
+      res.send("Please fill the requirements");
+    }
+    const newMessage = new messageModel({ conversationId, senderId, message });
+    await newMessage.save();
+
+    res.send(newMessage);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+const messageConversationId = asyncHandler(async (req, res) => {
+  try {
+    const conversationId = req.params.conversationId;
+    if (!conversationId === "new") return res.json([]);
+    const messages = await messageModel.find({ conversationId });
+    const messageItem = Promise.allSettled(
+      messages.map(async (message) => {
+        const user = await UserModel.findById(message.senderId);
+        return {
+          user: { email: user.email, name: user.name },
+          message: message.message,
+        };
+      })
+    );
+    res.send(await messageItem);
+  } catch (error) {
+    console.log(error);
+  }
+});
 module.exports = {
   registerUser,
   allUsers,
   authUser,
   conversation,
   conversationUserId,
+  message,
+  messageConversationId,
 };
