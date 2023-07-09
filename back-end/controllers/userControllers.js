@@ -47,7 +47,9 @@ const authUser = asyncHandler(async (req, res) => {
 
   if (createUser && (await createUser.matchPassword(password))) {
     res.json({
-      message: ["we did"],
+      // message: ["we did"],
+      email: createUser.email,
+      name: createUser.name,
     });
   }
 });

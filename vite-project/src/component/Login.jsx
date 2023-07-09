@@ -59,6 +59,7 @@ const Login = () => {
           isClosable: true,
           position: "bottom",
         });
+        console.log(err);
         setLoading(false);
       });
   };

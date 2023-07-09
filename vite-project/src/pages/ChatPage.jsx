@@ -9,6 +9,8 @@ import {
 } from "@chakra-ui/react";
 import { AiOutlineSend } from "react-icons/ai";
 import { BsPlusLg } from "react-icons/bs";
+import axios from "axios";
+import { conversation } from "../../../back-end/controllers/userControllers";
 
 const ChatPage = () => {
   const chats = [
@@ -49,6 +51,34 @@ const ChatPage = () => {
     },
   ];
 
+  useEffect(() => {
+    const conversationId = async () => {
+      const userLoggedIn = JSON.parse(localStorage.getItem("userInfo"));
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+      await axios
+        .get(
+          `http://localhost:7001/user/conversation/:${userLoggedIn.id}`,
+          config
+        )
+        .then((data) => {
+          console.log(data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    };
+  }, []);
+  // conversationId();
+
+  const [user, userInfo] = useState(
+    JSON.parse(localStorage.getItem("userInfo"))
+  );
+  console.log("detail", user.data.name);
+
   return (
     <div className="chat-page">
       <section className="chat-container">
@@ -60,7 +90,7 @@ const ChatPage = () => {
               </WrapItem>
             </Wrap>
             <div>
-              <span>aman kumar</span>
+              <span>{user?.data.name}</span>
               <p>chat app</p>
             </div>
           </div>
