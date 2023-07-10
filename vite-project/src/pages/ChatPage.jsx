@@ -10,7 +10,7 @@ import {
 import { AiOutlineSend } from "react-icons/ai";
 import { BsPlusLg } from "react-icons/bs";
 import axios from "axios";
-import { conversation } from "../../../back-end/controllers/userControllers";
+// import { conversation } from "../../../back-end/controllers/userControllers";
 
 const ChatPage = () => {
   const chats = [
@@ -52,32 +52,35 @@ const ChatPage = () => {
   ];
 
   useEffect(() => {
+    const userLoggedIn = JSON.parse(localStorage.getItem("userInfo"));
     const conversationId = async () => {
-      const userLoggedIn = JSON.parse(localStorage.getItem("userInfo"));
       const config = {
         headers: {
           "Content-type": "application/json",
         },
       };
+
       await axios
         .get(
-          `http://localhost:7001/user/conversation/:${userLoggedIn.id}`,
+          `http://localhost:7001/user/conversation/6499f03ec42db01ef95fd2ae`,
           config
         )
         .then((data) => {
-          console.log(data);
+          console.log("these", data);
+          setConversation(data.data.conversationId);
         })
         .catch((error) => {
           console.error(error);
         });
     };
+    conversationId();
   }, []);
-  // conversationId();
 
   const [user, userInfo] = useState(
     JSON.parse(localStorage.getItem("userInfo"))
   );
-  console.log("detail", user.data.name);
+  const [Conversation, setConversation] = useState([]);
+  console.log("detail", user.data.name, user.data.id);
 
   return (
     <div className="chat-page">

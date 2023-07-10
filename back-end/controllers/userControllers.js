@@ -48,6 +48,7 @@ const authUser = asyncHandler(async (req, res) => {
   if (createUser && (await createUser.matchPassword(password))) {
     res.json({
       // message: ["we did"],
+      id: createUser._id,
       email: createUser.email,
       name: createUser.name,
     });
@@ -101,14 +102,18 @@ const conversationUserId = asyncHandler(async (req, res) => {
       members: { $in: [userId] },
     });
 
-    const conversationUnit = await Promise.all(
+    const conversationUnit = Promise.allSettled(
       conversation.map(async (conversation) => {
         const receiveId = await conversation.members.find(
           (members) => members !== userId
         );
-        const user = await UserModel.findById(receiveId);
+        // const user = await UserModel.findById(receiveId);
         return {
-          user: { email: user.email, name: user.name, pic: user.pic },
+          // user: {
+          //   // email: user.email,
+          //   name: user.name,
+          //   pic: user.pic,
+          // },
           conversationId: conversation._id,
         };
       })
