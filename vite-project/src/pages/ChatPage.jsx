@@ -52,7 +52,6 @@ const ChatPage = () => {
   ];
 
   useEffect(() => {
-    const userLoggedIn = JSON.parse(localStorage.getItem("userInfo"));
     const conversationId = async () => {
       const config = {
         headers: {
@@ -67,7 +66,7 @@ const ChatPage = () => {
         )
         .then((data) => {
           console.log("these", data);
-          setConversation(data.data.conversationId);
+          setConversation(data);
         })
         .catch((error) => {
           console.error(error);

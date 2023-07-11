@@ -95,35 +95,35 @@ const conversation = asyncHandler(async (req, res) => {
   }
 });
 
-const conversationUserId = asyncHandler(async (req, res) => {
+const conversationUserId = async (req, res) => {
   try {
     const userId = req.params.userId;
     const conversation = await conversationModel.find({
       members: { $in: [userId] },
     });
 
-    const conversationUnit = Promise.allSettled(
+    const conversationUnit = await Promise.allSettled(
       conversation.map(async (conversation) => {
         const receiveId = await conversation.members.find(
-          (members) => members !== userId
+          (members) => members.members !== userId
         );
-        // const user = await UserModel.findById(receiveId);
+        const user = await UserModel.findById(receiveId);
         return {
-          // user: {
-          //   // email: user.email,
-          //   name: user.name,
-          //   pic: user.pic,
-          // },
+          user: {
+            email: user.email,
+            name: user.name,
+            pic: user.pic,
+          },
           conversationId: conversation._id,
         };
       })
     );
-
-    res.send(await conversationUnit);
+    // console.log(conversationUnit);
+    res.send(conversationUnit);
   } catch (error) {
     console.log(error);
   }
-});
+};
 
 const message = asyncHandler(async (req, res) => {
   try {
