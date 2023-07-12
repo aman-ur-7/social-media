@@ -159,7 +159,7 @@ const messageConversationId = asyncHandler(async (req, res) => {
     const conversationId = req.params.conversationId;
     if (!conversationId === "new") return res.json([]);
     const messages = await messageModel.find({ conversationId });
-    const messageItem = Promise.allSettled(
+    const messageItem = await Promise.allSettled(
       messages.map(async (message) => {
         const user = await UserModel.findById(message.senderId);
         return {
@@ -168,7 +168,7 @@ const messageConversationId = asyncHandler(async (req, res) => {
         };
       })
     );
-    res.send(await messageItem);
+    res.status(200).json(await messageItem);
   } catch (error) {
     console.log(error);
   }

@@ -185,6 +185,7 @@ export const GlobalStyle = createGlobalStyle`
                     width: 45%;
                     border-top-left-radius:15px ;
                     border-bottom-right-radius:15px ;
+                    margin: 7px;
                 }
                 
                 .reciever{

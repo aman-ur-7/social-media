@@ -17,6 +17,7 @@ const ChatPage = () => {
   );
   const [Conversation, setConversation] = useState([]);
   const [messages, setMessages] = useState([]);
+  console.log(Conversation);
 
   useEffect(() => {
     const conversationId = async () => {
@@ -41,7 +42,6 @@ const ChatPage = () => {
   }, []);
 
   const fetchMessages = async () => {
-    // console.log(Conversation[0].value.conversationId);
     const config = {
       headers: {
         "Content-type": "application/json",
@@ -54,15 +54,13 @@ const ChatPage = () => {
         config
       )
       .then((data) => {
-        // console.log("response", data.data[0].value.message);
+        console.log(data);
         setMessages(data);
       })
       .catch((error) => {
         console.error(error);
       });
   };
-  // console.log("detail", user.data.name, user.data.id);
-  // console.log(Conversation);
 
   return (
     <div className="chat-page">
@@ -130,29 +128,21 @@ const ChatPage = () => {
           </header>
           <div className="chat-div">
             <div>
-              {messages.length > 0
-                ? messages.map(({ message, user: { id } } = {}) => {
-                    console.log("s");
-                    if (id === user?.id) {
-                      return (
-                        <div className="reciever">
-                          <p>{message}</p>
-                        </div>
-                      );
-                    } else {
-                      return (
-                        <div className="sender">
-                          <p>{message}</p>
-                        </div>
-                      );
-                    }
-                  })
-                : (console.log("else", messages),
-                  (
-                    <div className="sender">
-                      <p> Here is an error!</p>
-                    </div>
-                  ))}
+              <div className="sender">
+                <p>
+                  Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+                  Iure, quo.
+                </p>
+              </div>
+              <div className="reciever">
+                <p>
+                  Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+                  Iure, qu.
+                </p>
+              </div>
+              <div className="sender">
+                <p> Here is an error!</p>
+              </div>
             </div>
           </div>
           <footer className="chat-footer">
