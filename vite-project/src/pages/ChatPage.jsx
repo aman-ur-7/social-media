@@ -10,46 +10,13 @@ import {
 import { AiOutlineSend } from "react-icons/ai";
 import { BsPlusLg } from "react-icons/bs";
 import axios from "axios";
-// import { conversation } from "../../../back-end/controllers/userControllers";
 
 const ChatPage = () => {
-  const chats = [
-    {
-      name: "John Doe",
-      status: "online",
-      img: "",
-    },
-    {
-      name: "Piyush",
-      status: "offline",
-      img: "",
-    },
-    {
-      name: "john wick",
-      status: "online",
-      img: "",
-    },
-    {
-      name: "inter",
-      status: "offline",
-      img: "",
-    },
-    {
-      name: "steve",
-      status: "online",
-      img: "",
-    },
-    {
-      name: "andrew",
-      status: "busy",
-      img: "",
-    },
-    {
-      name: "tobey",
-      status: "busy",
-      img: "",
-    },
-  ];
+  const [user, userInfo] = useState(
+    JSON.parse(localStorage.getItem("userInfo"))
+  );
+  const [Conversation, setConversation] = useState([]);
+  const [messages, setMessages] = useState([]);
 
   useEffect(() => {
     const conversationId = async () => {
@@ -60,13 +27,11 @@ const ChatPage = () => {
       };
 
       await axios
-        .get(
-          `http://localhost:7001/user/conversation/6499f03ec42db01ef95fd2ae`,
-          config
-        )
+        .get(`http://localhost:7001/user/conversation/${user.data.id}`, config)
         .then((data) => {
-          console.log("these", data);
-          setConversation(data);
+          const userData = data.data;
+          // const userData = userDatas.user;
+          setConversation(userData);
         })
         .catch((error) => {
           console.error(error);
@@ -75,11 +40,29 @@ const ChatPage = () => {
     conversationId();
   }, []);
 
-  const [user, userInfo] = useState(
-    JSON.parse(localStorage.getItem("userInfo"))
-  );
-  const [Conversation, setConversation] = useState([]);
-  console.log("detail", user.data.name, user.data.id);
+  const fetchMessages = async () => {
+    // console.log(Conversation[0].value.conversationId);
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+      },
+    };
+
+    await axios
+      .get(
+        `http://localhost:7001/user/message/${Conversation[0].value.conversationId}`,
+        config
+      )
+      .then((data) => {
+        // console.log("response", data.data[0].value.message);
+        setMessages(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+  // console.log("detail", user.data.name, user.data.id);
+  // console.log(Conversation);
 
   return (
     <div className="chat-page">
@@ -100,24 +83,28 @@ const ChatPage = () => {
           <div>
             <div className="users-avatar">
               <div></div>
-              {chats.map((elements) => (
-                <div key={elements.name} className="avatar-container">
+              {Conversation.map((elements) => (
+                <div
+                  key={elements.value.conversationId}
+                  className="avatar-container"
+                  onClick={() => fetchMessages()}
+                >
                   <Stack direction="row">
                     <Avatar
-                      name={elements.name}
-                      p={elements.status}
+                      name={elements.value.user.name}
+                      p={elements.value.user.email}
                       src="https://bit.ly/dan-abramov"
                     >
                       <AvatarBadge
                         boxSize="1.1em"
                         bg="green.500"
-                        image="https://bit.ly/dan-abramov"
+                        image={elements.value.user.pic}
                       />
                     </Avatar>
                   </Stack>
                   <div>
-                    <h5>{elements.name}</h5>
-                    <p>{elements.status}</p>
+                    <h5>{elements.value.user.name}</h5>
+                    <p>{elements.value.user.email}</p>
                   </div>
                 </div>
               ))}
@@ -143,18 +130,29 @@ const ChatPage = () => {
           </header>
           <div className="chat-div">
             <div>
-              <div className="sender">
-                <p>
-                  Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                  sender
-                </p>
-              </div>
-              <div className="reciever">
-                <p>
-                  Voluptate porro ipsum non praesentium nobis libero blanditiis
-                  reciever
-                </p>
-              </div>
+              {messages.length > 0
+                ? messages.map(({ message, user: { id } } = {}) => {
+                    console.log("s");
+                    if (id === user?.id) {
+                      return (
+                        <div className="reciever">
+                          <p>{message}</p>
+                        </div>
+                      );
+                    } else {
+                      return (
+                        <div className="sender">
+                          <p>{message}</p>
+                        </div>
+                      );
+                    }
+                  })
+                : (console.log("else", messages),
+                  (
+                    <div className="sender">
+                      <p> Here is an error!</p>
+                    </div>
+                  ))}
             </div>
           </div>
           <footer className="chat-footer">

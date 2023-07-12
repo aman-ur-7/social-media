@@ -163,7 +163,7 @@ const messageConversationId = asyncHandler(async (req, res) => {
       messages.map(async (message) => {
         const user = await UserModel.findById(message.senderId);
         return {
-          user: { email: user.email, name: user.name },
+          user: { id: user._id, email: user.email, name: user.name },
           message: message.message,
         };
       })
