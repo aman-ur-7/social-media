@@ -168,6 +168,7 @@ const messageConversationId = asyncHandler(async (req, res) => {
         };
       })
     );
+    console.log(messageItem);
     res.status(200).json(await messageItem);
   } catch (error) {
     console.log(error);

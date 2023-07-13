@@ -177,7 +177,6 @@ export const GlobalStyle = createGlobalStyle`
                     display: none;
                 }
                 
-                
                 .sender{
                     filter: drop-shadow(5px 5px 5px rgba(0,0,0,0.3));
                     background: #f3f3f3;
@@ -185,11 +184,10 @@ export const GlobalStyle = createGlobalStyle`
                     width: 45%;
                     border-top-left-radius:15px ;
                     border-bottom-right-radius:15px ;
-                    margin: 7px;
                 }
                 
                 .reciever{
-                    margin: 0 0 0 auto;
+                    margin: 0 0 7px auto;
                     background: #236eef;
                     padding: 3px;
                     width: 45%;

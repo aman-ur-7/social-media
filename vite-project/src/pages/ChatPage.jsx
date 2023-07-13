@@ -15,9 +15,9 @@ const ChatPage = () => {
   const [user, userInfo] = useState(
     JSON.parse(localStorage.getItem("userInfo"))
   );
-  const [Conversation, setConversation] = useState([]);
   const [messages, setMessages] = useState([]);
-  console.log(Conversation);
+  const [Conversation, setConversation] = useState([]);
+  console.log(Conversation[0]);
 
   useEffect(() => {
     const conversationId = async () => {
@@ -31,6 +31,7 @@ const ChatPage = () => {
         .get(`http://localhost:7001/user/conversation/${user.data.id}`, config)
         .then((data) => {
           const userData = data.data;
+          // console.log("user are ", userData);
           // const userData = userDatas.user;
           setConversation(userData);
         })
@@ -39,6 +40,7 @@ const ChatPage = () => {
         });
     };
     conversationId();
+    Conversation;
   }, []);
 
   const fetchMessages = async () => {
@@ -91,7 +93,7 @@ const ChatPage = () => {
                     <Avatar
                       name={elements.value.user.name}
                       p={elements.value.user.email}
-                      src="https://bit.ly/dan-abramov"
+                      src={elements.value.user.pic}
                     >
                       <AvatarBadge
                         boxSize="1.1em"
@@ -121,28 +123,51 @@ const ChatPage = () => {
                 </WrapItem>
               </Wrap>
               <div>
-                <span>John deo</span>
+                <span>john deo</span>
                 <p>chat app</p>
               </div>
             </div>
           </header>
           <div className="chat-div">
             <div>
-              <div className="sender">
-                <p>
-                  Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                  Iure, quo.
-                </p>
-              </div>
-              <div className="reciever">
-                <p>
-                  Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                  Iure, qu.
-                </p>
-              </div>
-              <div className="sender">
-                <p> Here is an error!</p>
-              </div>
+              {messages.status === 200 ? (
+                messages.data.map(
+                  ({ value: { message, user: { id } } = {} }) => {
+                    return (
+                      <div
+                        className={`${
+                          id === user.data.id ? "sender" : "reciever"
+                        }`}
+                        key={id}
+                      >
+                        <p>{message}</p>
+                      </div>
+                    );
+                    // if (id === user.data.id) {
+                    //   // return console.log("its working");
+                    //   // } else {
+                    //   // console.log("id is ", id);
+                    //   // return console.log("'it's not working");
+                    //   // }
+                    //   return (
+                    //     <div className="sender" key={id}>
+                    //       <p>{message}</p>
+                    //     </div>
+                    //   );
+                    // } else {
+                    //   return (
+                    //     <div className="reciever" key={id}>
+                    //       <p>{message}</p>
+                    //     </div>
+                    //   );
+                    // }
+                  }
+                )
+              ) : (
+                <div>
+                  <p>No messages yet</p>
+                </div>
+              )}
             </div>
           </div>
           <footer className="chat-footer">
