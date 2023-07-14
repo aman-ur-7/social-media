@@ -179,8 +179,9 @@ export const GlobalStyle = createGlobalStyle`
                 
                 .sender{
                     filter: drop-shadow(5px 5px 5px rgba(0,0,0,0.3));
+                    margin: 7px;
                     background: #f3f3f3;
-                    padding: 3px;
+                    padding: 5px;
                     width: 45%;
                     border-top-left-radius:15px ;
                     border-bottom-right-radius:15px ;
@@ -189,7 +190,7 @@ export const GlobalStyle = createGlobalStyle`
                 .reciever{
                     margin: 0 0 7px auto;
                     background: #236eef;
-                    padding: 3px;
+                    padding: 5px;
                     width: 45%;
                     border-top-left-radius:15px;
                     border-bottom-right-radius:15px ;

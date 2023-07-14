@@ -16,8 +16,9 @@ const ChatPage = () => {
     JSON.parse(localStorage.getItem("userInfo"))
   );
   const [messages, setMessages] = useState([]);
+  const [sendMessage, setSendMessage] = useState();
   const [Conversation, setConversation] = useState([]);
-  console.log(Conversation[0]);
+  console.log(user.data.id);
 
   useEffect(() => {
     const conversationId = async () => {
@@ -43,7 +44,7 @@ const ChatPage = () => {
     Conversation;
   }, []);
 
-  const fetchMessages = async () => {
+  const fetchMessages = async (user) => {
     const config = {
       headers: {
         "Content-type": "application/json",
@@ -56,12 +57,41 @@ const ChatPage = () => {
         config
       )
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         setMessages(data);
+        console.log(messages);
       })
       .catch((error) => {
         console.error(error);
       });
+  };
+
+  const sendMessages = async () => {
+    try {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+
+      const data = {
+        conversationId: Conversation[0].value.conversationId,
+        senderId: user.data.id,
+        message: sendMessage,
+        receiveId: messages.data[1].value.user.id,
+      };
+
+      await axios
+        .post(`http://localhost:7001/user/message`, data, config)
+        .then((data) => {
+          console.log(data);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -118,12 +148,12 @@ const ChatPage = () => {
                 <WrapItem>
                   <Avatar
                     name="Dan Abrahmov"
-                    src="https://bit.ly/dan-abramov"
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrfBGZTKPYI95D-RUv48HgjcYnf3vcYUlBVg&usqp=CAU"
                   />
                 </WrapItem>
               </Wrap>
               <div>
-                <span>john deo</span>
+                <span>{user.data.name}</span>
                 <p>chat app</p>
               </div>
             </div>
@@ -138,7 +168,7 @@ const ChatPage = () => {
                         className={`${
                           id === user.data.id ? "sender" : "reciever"
                         }`}
-                        key={id}
+                        key={message}
                       >
                         <p>{message}</p>
                       </div>
@@ -170,22 +200,26 @@ const ChatPage = () => {
               )}
             </div>
           </div>
-          <footer className="chat-footer">
-            <div>
-              <Stack>
-                <Input
-                  variant="filled"
-                  placeholder="Filled"
-                  width="450px"
-                  border={"none"}
-                />
-              </Stack>
-              <div className="chat-icons">
-                <AiOutlineSend />
-                <BsPlusLg />
+          {messages?.data && (
+            <footer className="chat-footer">
+              <div>
+                <Stack>
+                  <Input
+                    variant="filled"
+                    placeholder="Filled"
+                    width="450px"
+                    border={"none"}
+                    value={sendMessage || ""}
+                    onChange={(e) => setSendMessage(e.target.value)}
+                  />
+                </Stack>
+                <div className="chat-icons">
+                  <AiOutlineSend onClick={() => sendMessages()} />
+                  <BsPlusLg />
+                </div>
               </div>
-            </div>
-          </footer>
+            </footer>
+          )}
         </section>
         <section className="right-section"></section>
       </section>

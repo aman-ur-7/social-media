@@ -110,6 +110,7 @@ const conversationUserId = async (req, res) => {
         const user = await UserModel.findById(receiveId);
         return {
           user: {
+            receiveId: user._id,
             email: user.email,
             name: user.name,
             pic: user.pic,
@@ -128,6 +129,7 @@ const conversationUserId = async (req, res) => {
 const message = asyncHandler(async (req, res) => {
   try {
     const { conversationId, senderId, message, receiveId = "" } = req.body;
+    console.log("sender id is", conversationId, senderId);
     if (!senderId || !message) return res.send("Please fill the requirements");
     if (!conversationId && receiveId) {
       const newConversation = new conversationModel({
