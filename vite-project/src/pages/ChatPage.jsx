@@ -10,11 +10,13 @@ import {
 import { AiOutlineSend } from "react-icons/ai";
 import { BsPlusLg } from "react-icons/bs";
 import axios from "axios";
+import { io } from "socket.io-client";
 
 const ChatPage = () => {
   const [user, userInfo] = useState(
     JSON.parse(localStorage.getItem("userInfo"))
   );
+  const [socket, setSocket] = useState(null);
   const [messages, setMessages] = useState([]);
   const [sendMessage, setSendMessage] = useState();
   const [Conversation, setConversation] = useState([]);
