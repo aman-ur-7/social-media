@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Wrap,
   WrapItem,
@@ -17,10 +17,21 @@ const ChatPage = () => {
     JSON.parse(localStorage.getItem("userInfo"))
   );
   const [socket, setSocket] = useState(null);
+  const messageRef = useRef(null);
   const [messages, setMessages] = useState([]);
   const [sendMessage, setSendMessage] = useState();
   const [Conversation, setConversation] = useState([]);
-  console.log(user.data.id);
+
+  useEffect(() => {
+    setSocket(io("http://localhost:7000/"));
+  }, []);
+
+  useEffect(() => {
+    socket?.emit("addUser", user.id);
+    socket?.on("getUser", (users) => {
+      console.log("active user", users);
+    });
+  }, []);
 
   useEffect(() => {
     const conversationId = async () => {
@@ -166,14 +177,17 @@ const ChatPage = () => {
                 messages.data.map(
                   ({ value: { message, user: { id } } = {} }) => {
                     return (
-                      <div
-                        className={`${
-                          id === user.data.id ? "sender" : "reciever"
-                        }`}
-                        key={message}
-                      >
-                        <p>{message}</p>
-                      </div>
+                      <>
+                        <div
+                          className={`${
+                            id === user.data.id ? "sender" : "reciever"
+                          }`}
+                          key={message}
+                        >
+                          <p>{message}</p>
+                        </div>
+                        <div ref={messageRef}></div>
+                      </>
                     );
                     // if (id === user.data.id) {
                     //   // return console.log("its working");
