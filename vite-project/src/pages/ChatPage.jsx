@@ -22,16 +22,16 @@ const ChatPage = () => {
   const [sendMessage, setSendMessage] = useState();
   const [Conversation, setConversation] = useState([]);
 
-  useEffect(() => {
-    setSocket(io("http://localhost:7000/"));
-  }, []);
+  // useEffect(() => {
+  //   setSocket(io("http://localhost:7000/"));
+  // }, []);
 
-  useEffect(() => {
-    socket?.emit("addUser", user.id);
-    socket?.on("getUser", (users) => {
-      console.log("active user", users);
-    });
-  }, []);
+  // useEffect(() => {
+  //   socket?.emit("addUser", user.id);
+  //   socket?.on("getUser", (users) => {
+  //     console.log("active user", users);
+  //   });
+  // }, []);
 
   useEffect(() => {
     const conversationId = async () => {
@@ -79,6 +79,7 @@ const ChatPage = () => {
       });
   };
 
+  // useEffect(() => {
   const sendMessages = async () => {
     try {
       const config = {
@@ -106,6 +107,7 @@ const ChatPage = () => {
       console.log(error);
     }
   };
+  // }, []);
 
   return (
     <div className="chat-page">

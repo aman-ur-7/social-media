@@ -147,6 +147,7 @@ export const GlobalStyle = createGlobalStyle`
                 align-items: center;
                 gap: 17px;
                 display: flex;
+                cursor: pointer;
             }
 
         }
@@ -234,7 +235,11 @@ export const GlobalStyle = createGlobalStyle`
         text-transform: capitalize;
         font-weight: bold;
     }
-
 }
+
+/* .right-section{
+    border: 1px solid red;
+
+} */
 
 `;
