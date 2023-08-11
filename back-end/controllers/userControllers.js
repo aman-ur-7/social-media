@@ -56,29 +56,11 @@ const authUser = asyncHandler(async (req, res) => {
 });
 
 const allUsers = asyncHandler(async (req, res) => {
-  // const keyword = req.query.search
-  //   ? {
-  //       $or: [
-  //         { name: { $regex: req.query.search, $options: "i" } },
-  //         { email: { $regex: req.query.search, $options: "i" } },
-  //       ],
-  //     }
-  //   : {};
-
-  // const curnUser = await user
-  //   .find(keyword)
-  //   .find({ _id: { $ne: req.user._id } });
-
-  // res.send(curnUser);
-
   try {
-    const users = await UserModel.find();
-    const onlyUsers = users.map((user) => {
-      return { user: { name: user.name, email: user.email }, userId: user._id };
-    });
-    res.send(onlyUsers);
+    const allUser = await UserModel.find({});
+    res.status(200).send(allUser);
   } catch (error) {
-    console.log(error);
+    res.send(error);
   }
 });
 
@@ -143,7 +125,7 @@ const message = asyncHandler(async (req, res) => {
         message,
       });
       await newMessage.save();
-      res.send("radhe radhe");
+      res.send(message);
     } else if (!conversationId && !receiveId) {
       res.send("Please fill the requirements");
     }
