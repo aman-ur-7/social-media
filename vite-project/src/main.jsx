@@ -7,10 +7,7 @@ import { GlobalStyle } from "./GlobalStyle.jsx";
 import { BrowserRouter as Router } from "react-router-dom";
 
 const theme = {
-  colors: {
-    header_background: "#e8f1d7",
-    header_color: "#193d0b",
-  },
+  colors: {},
 };
 
 ReactDOM.createRoot(document.getElementById("root")).render(
