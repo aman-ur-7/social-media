@@ -126,6 +126,7 @@ const message = asyncHandler(async (req, res) => {
       });
       await newMessage.save();
       res.send(message);
+      console.log(message);
     } else if (!conversationId && !receiveId) {
       res.send("Please fill the requirements");
     }
